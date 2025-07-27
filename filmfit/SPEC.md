@@ -51,11 +51,11 @@
 - [x] 5.2.8 PlacedRectangle을 길게 press 하지 않고 스크롤하는 경우는 Board를 스크롤해줘. 다른 사각형들은 회전되거나 이동되면 안돼.
 
 ## 5.3 PlacedRectangle 드래그 앤 드랍 스내핑
-- [ ] 5.3.1 드래그하는 PlacedRectangle이 다른 사각형 모서리나 꼭지점 가까이 가면 그 사각형 모서리나 꼭지점에 snap 시킬거야. snap 되는 기준은 20px 로 할게. 
-- [ ] 5.3.2 snap 된 PlacedRectangle을 다시 모서리나 꼭지점에서 20px 이상 떨어지게 움직이면 snap 해제되어야해
-- [ ] 5.3.3 드래그하는 PlacedRectangle 이 Board 근처에 가면 Board 모서리나 꼭지점에 snap 시킬거야. snap 되는 기준은 20px 로 할게. 
-- [ ] 5.3.4 snap 된 PlacedRectangle을 다시 Board 모서리나 꼭지점에서 20px 이상 떨어지게 움직이면 snap 해제되어야해
-- [ ] 스내핑할때는 꼭지점이 모서리보다 우선이야. 가장 가까운 거리 우선으로 스내핑해줘
+- [x] 5.3.1 드래그하는 PlacedRectangle이 다른 사각형 모서리나 꼭지점 가까이 가면 그 사각형 모서리나 꼭지점에 snap 시킬거야. snap 되는 기준은 20px 로 할게. 
+- [x] 5.3.2 snap 된 PlacedRectangle을 다시 모서리나 꼭지점에서 20px 이상 떨어지게 움직이면 snap 해제되어야해
+- [x] 5.3.3 드래그하는 PlacedRectangle 이 Board 근처에 가면 Board 모서리나 꼭지점에 snap 시킬거야. snap 되는 기준은 20px 로 할게. 
+- [x] 5.3.4 snap 된 PlacedRectangle을 다시 Board 모서리나 꼭지점에서 20px 이상 떨어지게 움직이면 snap 해제되어야해
+- [x] 스내핑할때는 꼭지점이 모서리보다 우선이야. 가장 가까운 거리 우선으로 스내핑해줘
 
 # 6. 배치 로직
 - [x] 6.1. '사각형 회전 허용안함' checkbox 가 체크된 경우는 만약 체크된 경우라면, RectangleInput을 '배치' 할때 사각형의 orientation 을 변경하지 않고 배치해야해. RectangleInput 에 입력받은 갯수만큼 배치해주고.
