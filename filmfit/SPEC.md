@@ -74,3 +74,6 @@
 - [x] 7.5 빨간색 실선 위쪽에 '50000mm (Original Limit)' 라벨을 빨간 배경으로 표시해줘
 - [x] 7.6 점선 그리기를 위해 DashedLinePainter CustomPainter 클래스를 구현해줘
 - [x] 7.7 DashedLinePainter는 색상, 점선 폭(dashWidth), 점선 간격(dashSpace)을 설정할 수 있어야해
+
+# 8. DashedLinePainter
+- [x] 8.1 가장 아래 PlacedRectangle 라인에 파란 점선을 그려주고, 실제로 쓰인 height mm를 파란 점선아래 표시해줘
