@@ -4,6 +4,82 @@ import '../models/placed_rectangle.dart';
 import '../services/placement_algorithm.dart';
 import '../widgets/placed_rectangle_widget.dart';
 
+// 점선을 그리는 CustomPainter
+class DashedLinePainter extends CustomPainter {
+  final Color color;
+  final double dashWidth;
+  final double dashSpace;
+  final String? text;
+  final bool showTextBelow;
+
+  DashedLinePainter({
+    required this.color,
+    this.dashWidth = 5.0,
+    this.dashSpace = 3.0,
+    this.text,
+    this.showTextBelow = false,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // 점선 그리기
+    final linePaint = Paint()
+      ..color = color
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    double startX = 0;
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, 1),
+        Offset(startX + dashWidth, 1),
+        linePaint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+
+    // 텍스트 그리기 (있는 경우)
+    if (text != null && text!.isNotEmpty) {
+      final textStyle = TextStyle(
+        color: Colors.white,
+        fontSize: 12,
+        fontWeight: FontWeight.bold,
+      );
+      final textSpan = TextSpan(
+        text: text,
+        style: textStyle,
+      );
+      final textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+
+      // 배경 박스 그리기
+      final textWidth = textPainter.width + 12; // 패딩 포함
+      final textHeight = textPainter.height + 6; // 패딩 포함
+      final textX = 8.0;
+      final textY = showTextBelow ? 8.0 : -textHeight + 2;
+
+      final backgroundPaint = Paint()
+        ..color = color
+        ..style = PaintingStyle.fill;
+      
+      final backgroundRect = RRect.fromLTRBR(
+        textX, textY, textX + textWidth, textY + textHeight, 
+        const Radius.circular(4)
+      );
+      canvas.drawRRect(backgroundRect, backgroundPaint);
+
+      // 텍스트 그리기
+      textPainter.paint(canvas, Offset(textX + 6, textY + 3));
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
 class BoardView extends StatefulWidget {
   final List<RectangleInput> rectangleInputs;
   final bool allowRotation;
@@ -232,22 +308,36 @@ class _BoardViewState extends State<BoardView> {
                 ),
                 child: Stack(
                   children: [
-                    // 50000mm 선 표시 (빨간 점선)
+                    // 50000mm 선 표시 (빨간 실선)
                     if (_boardHeight > PlacementAlgorithm.initialBoardHeight)
                       Positioned(
                         left: 0,
                         right: 0,
                         top: PlacementAlgorithm.initialBoardHeight * _scale,
-                        child: Container(
-                          height: 2,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                color: Colors.red,
-                                width: 2,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
+                        child: CustomPaint(
+                          size: const Size(double.infinity, 2),
+                          painter: DashedLinePainter(
+                            color: Colors.red,
+                            dashWidth: double.infinity, // 실선 효과
+                            dashSpace: 0,
+                            text: '${PlacementAlgorithm.initialBoardHeight.toInt()}mm (Original Limit)',
+                            showTextBelow: false,
+                          ),
+                        ),
+                      ),
+                    
+                    // 실제 사용된 높이 라인 (파란 점선)
+                    if (_placedRectangles.isNotEmpty && _usedHeight > 0)
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: _usedHeight * _scale,
+                        child: CustomPaint(
+                          size: const Size(double.infinity, 2),
+                          painter: DashedLinePainter(
+                            color: Colors.blue,
+                            text: 'Used: ${_usedHeight.toInt()}mm',
+                            showTextBelow: true,
                           ),
                         ),
                       ),
