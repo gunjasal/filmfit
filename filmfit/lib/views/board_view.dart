@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/rectangle_input.dart';
 import '../models/placed_rectangle.dart';
 import '../services/placement_algorithm.dart';
+import '../services/snapping_service.dart';
 import '../widgets/placed_rectangle_widget.dart';
 
 // 점선을 그리는 CustomPainter
@@ -102,6 +103,10 @@ class _BoardViewState extends State<BoardView> {
   double _usedHeight = 0;
   PlacedRectangle? _draggingRectangle;
   Offset? _dragStartPosition;
+  
+  // 스내핑 관련 상태
+  bool _isSnapped = false;
+  SnapPoint? _currentSnapPoint;
 
   static const double _boardWidth = PlacementAlgorithm.boardWidth;
 
@@ -193,11 +198,32 @@ class _BoardViewState extends State<BoardView> {
   void _onPanUpdate(PlacedRectangle rectangle, DragUpdateDetails details) {
     if (_draggingRectangle == null) return;
 
+    // 기본 새 위치 계산
     final newX = (rectangle.x + details.delta.dx / _scale).clamp(0.0, _boardWidth - rectangle.displayWidth);
     final newY = (rectangle.y + details.delta.dy / _scale).clamp(0.0, _boardHeight - rectangle.displayHeight);
 
+    // 임시 사각형으로 스내핑 계산
+    final tempRectangle = _draggingRectangle!.copyWith(x: newX, y: newY);
+    
+    // 스내핑 계산
+    final snapResult = SnappingService.calculateSnapping(
+      tempRectangle,
+      _placedRectangles,
+      _boardWidth,
+      _boardHeight,
+      _scale,
+    );
+
     setState(() {
-      _draggingRectangle = _draggingRectangle!.copyWith(x: newX, y: newY);
+      // 스내핑된 위치 또는 원래 위치 사용
+      _draggingRectangle = _draggingRectangle!.copyWith(
+        x: snapResult.x.clamp(0.0, _boardWidth - rectangle.displayWidth),
+        y: snapResult.y.clamp(0.0, _boardHeight - rectangle.displayHeight),
+      );
+      
+      // 스내핑 상태 업데이트
+      _isSnapped = snapResult.isSnapped;
+      _currentSnapPoint = snapResult.snapPoint;
       
       final index = _placedRectangles.indexWhere((r) => r.id == rectangle.id);
       if (index != -1) {
@@ -255,8 +281,11 @@ class _BoardViewState extends State<BoardView> {
         }
       }
       
+      // 스내핑 상태 초기화
       _draggingRectangle = null;
       _dragStartPosition = null;
+      _isSnapped = false;
+      _currentSnapPoint = null;
     });
   }
 
