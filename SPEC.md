@@ -105,3 +105,9 @@
 - [x] 9.7 OCR은 Google ML Kit의 Text Recognition API 사용
 - [x] 9.8 인식중에는 '텍스트 인식 중...' 프로그레스 바 표시해줘
 
+# 999. Bug
+- [ ] OCR 인식 후, 첫번째 RectangleInput 에는 입력이 되지 않음
+- [ ] 첫번째 RectangleInput 에 값이 노출되지 않지만, 배치가 됨
+- [ ] 배치 알고리즘 손봐야함
+- [ ] PlacedRectangle 드래그 ux 안좋음
+- [ ] 초기화에서는 모두 0 으로 입력되어 있어야함
